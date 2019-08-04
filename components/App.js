@@ -68,6 +68,7 @@ App = React.createClass({
     render: function() {
         var styles = {
             //style inline, brak minusa w textAlign!!
+            background: "#e6f7ff",
             margin: "0 auto",
             textAlign: "center",
             width: "90%"
@@ -75,12 +76,12 @@ App = React.createClass({
 
         return (
             <div style={styles}>
-                <h1>Wyszukiwarka GIFow!</h1>
+                <h1>Find your favourite GIF</h1>
                 <p>
-                    Znajdź gifa na <a href="http://giphy.com">giphy</a>.
-                    Naciskaj enter, aby pobrać kolejne gify.
+                    Find your GIF on <a href="http://giphy.com">giphy</a>.
+                    Press enter to add more fun.
                 </p>
-                <Search />
+                <Search onSearch={this.handleSearch} />
                 <Gif
                     loading={this.state.loading}
                     url={this.state.gif.url}

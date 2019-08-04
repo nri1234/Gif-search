@@ -1,4 +1,4 @@
-Serach = React.createClass({
+Search = React.createClass({
     getInitialState() {
         return {
             searchingText: ''
@@ -19,6 +19,10 @@ Serach = React.createClass({
     },
     render: function() {
         var styles = {
+            boxShadow: "5px 4px #bfbfbf",
+            padding: "5px",
+            borderRadius: "3px",
+            border: "1px solid black",
             fontSize: "1.5em",
             width: "90%",
             maxWidth: "350px"
@@ -28,7 +32,7 @@ Serach = React.createClass({
             type="text"
             onChange={this.handleChange}
             onKeyUp={this.handleKeyUp} //nasluchiwanie na wcisniecie enter
-            placeholder="Tutaj wpisz wyszukiwaną frazę"
+            placeholder="Type your gif name"
             style={styles}
             value={this.state.searchTerm}
             />
