@@ -9,7 +9,7 @@ Gif = React.createClass({
         return this.props.sourceUrl || GIPHY_LOADING_URL; //Zwraca ona adres do strony z pobranym obrazka albo do gifa sygnalizującego ładowanie
     },
     render: function() {
-        var url = this.props.loading ? GIPHY_LOADING_URL : this.props.url;
+        var url = this.props.loading ? GIPHY_LOADING_URL : console.log(Error);
         //ustawia URL tylko, jeśli this.props.loading ma wartość false. W przeciwnym wypadku zostanie użyty URL ze zmiennej GIPHY_LOADING_URL, która została zadeklarowana na samej górze -adres ten można zmienić dowolnie na taki, jaki nam odpowiada)
         return (
             <div style={styles}>
