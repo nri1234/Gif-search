@@ -1,4 +1,4 @@
-var GIPHY_API_URL = "https://api.giphy.com";
+var GIPHY_API_URL = "https://api.giph.com";
 var GIPHY_PUB_KEY = "usSKpVzw4FFBg7hyt1HJvEvAkXvIQBnC";
 App = React.createClass({
     getInitialState() {
@@ -8,23 +8,22 @@ App = React.createClass({
             gif: {}
         };
     },
-    handleSearch: function(searchingText) {
-        // 1.
+
+    handleSearch: function handleSearch(searchingText) {
         this.setState({
-            loading: true // 2.
+            loading: true
         });
-        this.getGif(
-            searchingText,
-            function(gif) {
-                // 3.
-                this.setState({
-                    // 4
-                    loading: false, // a
-                    gif: gif, // b
-                    searchingText: searchingText // c
+        this.getGif(searchingText)
+            .then(function(gif) {
+                return this.setState({ //jesli tekst zostanie wpisany rozpocznij pobieranie gifa
+                    loading: false,
+                    gif: gif,
+                    searchingText: searchingText
                 });
-            }.bind(this)
-        );
+            })
+            .catch(function(error) {
+                return console.error("Oh no, something is wrong!!!", error); // wylap i pokaz blad
+            });
     },
     //Algorytm postępowania dla tej metody jest następujący:
 
@@ -35,29 +34,38 @@ App = React.createClass({
     //przestań sygnalizować ładowanie,
     //ustaw nowego gifa z wyniku pobierania,
     //ustaw nowy stan dla wyszukiwanego tekstu.
-    getGif: function(searchingText, callback) {
-        // 1. ccallback czyli wcisniety enter
+    // 1. ccallback czyli wcisniety enter
+    getGif: function getGif(searchingText) {
         var url =
             GIPHY_API_URL +
             "/v1/gifs/random?api_key=" +
             GIPHY_PUB_KEY +
             "&tag=" +
-            searchingText; // 2.
-        var xhr = new XMLHttpRequest(); // 3.
-        xhr.open("GET", url);
-        xhr.onload = function() {
-            if (xhr.status === 200) {
-                var data = JSON.parse(xhr.responseText).data; // 4.
-                var gif = {
-                    // 5.
-                    url: data.fixed_width_downsampled_url,
-                    sourceUrl: data.url
-                };
-                callback(gif); // 6.
-            }
-        };
-        xhr.send();
+            searchingText;
+        return new Promise(function(resolve, reject) {
+            //nowa obietnica
+            var request = new XMLHttpRequest(); //
+            //Wywołujemy całą sekwencję tworzenia zapytania request do serwera i wysyłamy je.
+            request.onload = function() {
+                if (this.status === 200) {
+                    var data = JSON.parse(this.responseText).data;
+                    var gif = {
+                        url: data.fixed_width_downsampled_url,
+                        sourceUrl: data.url
+                    }; // W obiekcie odpowiedzi mamy obiekt z danymi. W tym miejscu rozpakowujemy je sobie do zmiennej data, aby nie pisać za każdym razem response.data.
+                    resolve(gif); //jesli wszystko ok to pokaz gif
+                } else { //jesli nie to pokazujemy bład
+                    reject(new Error(this.statusText));
+                }
+            };
+            request.onerror = function() {
+                reject(new Error( this.statusText));
+            }; //przekazujemy polecenie pokazania bledu
+            request.open("GET", url);
+            request.send();
+        });
     },
+
     //Na wejście metody getGif przyjmujemy dwa parametry: wpisywany tekst (searchingText) i funkcję, która ma się wykonać po pobraniu gifa (callback).
     // Konstruujemy adres URL dla API Giphy (pełną dokumentację znajdziesz pod tym adresem).
     // Wywołujemy całą sekwencję tworzenia zapytania XHR do serwera i wysyłamy je.
@@ -78,8 +86,8 @@ App = React.createClass({
             <div style={styles}>
                 <h1>Find your favourite GIF</h1>
                 <p>
-                    Find your GIF on <a href="http://giphy.com">giphy</a>.
-                    Press enter to add more fun.
+                    Find your GIF on <a href="http://giphy.com">giphy</a>. Press
+                    enter to add more fun.
                 </p>
                 <Search onSearch={this.handleSearch} />
                 <Gif
