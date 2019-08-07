@@ -1,7 +1,7 @@
-var GIPHY_API_URL = "https://api.giph.com";
+var GIPHY_API_URL = "https://api.gipy.com";
 var GIPHY_PUB_KEY = "usSKpVzw4FFBg7hyt1HJvEvAkXvIQBnC";
 App = React.createClass({
-    getInitialState() {
+    getInitialState: function getInitialState() {
         return {
             loading: false,
             searchingText: "", //klucz ktory odbiera od komponentu search
@@ -10,20 +10,29 @@ App = React.createClass({
     },
 
     handleSearch: function handleSearch(searchingText) {
+
+
         this.setState({
             loading: true
         });
         this.getGif(searchingText)
             .then(function(gif) {
-                return this.setState({ //jesli tekst zostanie wpisany rozpocznij pobieranie gifa
+                return this.setState({
+                    //jesli tekst zostanie wpisany rozpocznij pobieranie gifa
                     loading: false,
                     gif: gif,
                     searchingText: searchingText
                 });
-            })
+        }.bind(this))
             .catch(function(error) {
-                return console.error("Oh no, something is wrong!!!", error); // wylap i pokaz blad
-            });
+                return (
+                    console.error("Oh no, something is wrong!!!", error), // wylap i pokaz blad
+                    this.setState({
+                        //brak ladowania
+                        loading: false
+                    })
+                );
+        }.bind(this));
     },
     //Algorytm postępowania dla tej metody jest następujący:
 
@@ -54,12 +63,13 @@ App = React.createClass({
                         sourceUrl: data.url
                     }; // W obiekcie odpowiedzi mamy obiekt z danymi. W tym miejscu rozpakowujemy je sobie do zmiennej data, aby nie pisać za każdym razem response.data.
                     resolve(gif); //jesli wszystko ok to pokaz gif
-                } else { //jesli nie to pokazujemy bład
+                } else {
+                    //jesli nie to pokazujemy bład
                     reject(new Error(this.statusText));
                 }
             };
             request.onerror = function() {
-                reject(new Error( this.statusText));
+                reject(new Error("XMLHttpRequest Error: " + this.statusText));
             }; //przekazujemy polecenie pokazania bledu
             request.open("GET", url);
             request.send();
@@ -91,6 +101,7 @@ App = React.createClass({
                 </p>
                 <Search onSearch={this.handleSearch} />
                 <Gif
+                    error={this.state.error}
                     loading={this.state.loading}
                     url={this.state.gif.url}
                     sourceUrl={this.state.gif.sourceUrl}
