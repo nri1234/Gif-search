@@ -21,12 +21,12 @@ App = React.createClass({
                     searchingText: searchingText
                 })
             )
-            .catch(error =>
-                console.error("Oh no, something is wrong!!!", error)
-            ),
-            this.setState({
-                //brak ladowania
-                loading: false
+            .catch(error => {
+                console.error("Oh no, something is wrong!!!", error);
+                this.setState({
+                    //brak ladowania
+                    loading: false
+                });
             });
     },
     getGif: searchingText => {
