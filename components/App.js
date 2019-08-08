@@ -101,7 +101,6 @@ App = React.createClass({
                 </p>
                 <Search onSearch={this.handleSearch} />
                 <Gif
-                    error={this.state.error}
                     loading={this.state.loading}
                     url={this.state.gif.url}
                     sourceUrl={this.state.gif.sourceUrl}
