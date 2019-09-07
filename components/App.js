@@ -54,7 +54,7 @@ App = React.createClass({
     },
     render: function() {
         let styles = {
-            background: "#e6f7ff",
+            background: "#b3ffff",
             margin: "0 auto",
             textAlign: "center",
             width: "90%"
